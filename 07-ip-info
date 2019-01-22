@@ -1,0 +1,13 @@
+#!/bin/bash
+
+__padding="    "
+__interfaces=($(ifconfig -a | grep -Eo '^[a-zA-Z]{3}[0-9]+'))
+
+printf "${__padding}Hostname/IP..: $(hostname -f) / $(ifconfig ${__interfaces[0]}| grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*')\n"
+
+# determine number of interaces
+if [ "${#__interfaces[@]}" -gt 1 ]; then
+    for i in "${__interfaces[@]}"; do
+        printf "${__padding}Additional IP: $(ifconfig ${__interfaces[0]}| grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*')\n"
+    done
+fi

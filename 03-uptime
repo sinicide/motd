@@ -1,0 +1,5 @@
+#!/bin/bash
+
+__padding="    "
+
+printf "${__padding}Uptime.......: $(uptime -p | sed 's/^up.//')\n"

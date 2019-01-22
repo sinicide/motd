@@ -1,0 +1,29 @@
+#!/bin/bash
+
+__reset="\e[39m"
+__red="\e[31m"
+__green="\e[32m"
+__yellow="\e[33m"
+__padding="    "
+
+__loadAvgArr[0]="$(cat /proc/loadavg | awk '{print $1};')"      # One Minute
+__loadAvgArr[1]="$(cat /proc/loadavg | awk '{print $2};')"      # Five Minute
+__loadAvgArr[2]="$(cat /proc/loadavg | awk '{print $3};')"      # Fifteen Minute
+
+# requires bc to compare floats
+if [ "$(command -v bc)" ]; then
+    for i in "${!__loadAvgArr[@]}"; do
+        if [ "$(echo "${__loadAvgArr[${i}]} / $(nproc) < .75" | bc)" ]; then
+            # low load
+            __loadAvgArr[${i}]="${__green}${__loadAvgArr[${i}]}${__reset}"
+        elif [ "$(echo "${__loadAvgArr[${i}]} $(nproc) < .99" | bc)" ]; then
+            # medium load
+            __loadAvgArr[${i}]="${__yellow}${__loadAvgArr[${i}]}${__reset}"
+        else
+            # high load
+            __loadAvgArr[${i}]="${__red}${__loadAvgArr[${i}]}${__reset}"
+        fi
+    done
+fi
+
+printf "${__padding}Load.........: ${__loadAvgArr[0]} (1 minute) ${__loadAvgArr[1]} (5 minutes) ${__loadAvgArr[2]} (15 minutes)\n"

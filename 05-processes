@@ -1,0 +1,7 @@
+#!/bin/bash
+
+__reset="\e[39m"
+__green="\e[32m"
+__padding="    "
+
+printf "${__padding}Processes....: ${__green}$(ps -ef | wc -l)${__reset} total running processes\n"

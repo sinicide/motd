@@ -1,0 +1,16 @@
+#!/bin/bash
+
+__reset="\e[39m"
+__green="\e[32m"
+__padding="    "
+__lastLoginUser="$(last -w | head -1 | awk '{print $1};')"
+__lastLoginTime="$(last -F | head -1 | awk '{print $4,$5,$6,$7};')"
+__lastLoginIP="$(last | head -1 | awk '{print $3};')"
+
+printf "${__padding}Last Login...: (${__green}${__lastLoginUser}${__reset}) @ ${__lastLoginTime} from ${__lastLoginIP}\n"
+
+if [ "$(who | wc -l)" -gt 1 ]; then
+    printf "${__padding}Logins.......: There are currently ${__green}$(who | wc -l)${__reset} users logged in\n"
+else
+    printf "${__padding}Logins.......: There is currently ${__green}$(who | wc -l)${__reset} user logged in\n"
+fi

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+__reset="\e[39m"
+__green="\e[32m"
+__osDistribution=""
+__osVersion=""
+__kernel="$(uname -r)"
+
+# sourcing centerIt
+source "/etc/update-motd.d/functions/centerIt.sh"
+
+if [ -f "/etc/os-release" ]; then
+    # source the variables
+    . /etc/os-release
+    __osDistribution=$NAME
+    __osVersion=$VERSION
+elif [ $(type lsb_release >/dev/null 2>&1) ]; then
+    # try lsb_release command
+    __osDistribution="$(lsb_release -si)"
+    __osVersion="$(lsb_release -sr)"
+elif [ -f "/etc/lsb-release" ]; then
+    # source the variables
+    . /etc/lsb-release
+    __osDistribution=$DISTRIB_ID
+    __osVersion=$DISTRIB_RELEASE
+else
+    # last but not least
+    __osDistribution="$(uname -s)"
+    __osVersion="$(uname -r)"
+fi
+
+length="${__osDistribution} ${__osVersion} / kernel ${__kernel}"
+length="${#length}"
+
+centerIt "${length}" "${__osDistribution} ${__green}${__osVersion}${__reset} / kernel ${__kernel}"
+printf "\n"

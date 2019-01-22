@@ -1,0 +1,24 @@
+#!/bin/bash
+
+__reset="\e[39m"
+__red="\e[31m"
+__green="\e[32m"
+__yellow="\e[33m"
+__padding="    "
+
+# determine how much Memory is used and color coat it.
+__used="$(free -m | grep Mem: | awk '{print $3};')"
+__total="$(free -m | grep Mem: | awk '{print $2};')"
+
+# requires bc to compare floats
+if [ "$(command -v bc)" ]; then
+    if [ "$(echo "${__used} / ${__total} < .50" | bc)" ]; then
+        __used="${__green}${__used}${__reset}"
+    elif [ "$(echo "${__used} / ${__total} < .75" | bc)" ]; then
+        __used="${__yellow}${__used}${__reset}"
+    else
+        __used="${__red}${__used}${__reset}"
+    fi
+fi
+
+printf "${__padding}Memory.......: ${__used} MB used, ${__total} MB total\n"

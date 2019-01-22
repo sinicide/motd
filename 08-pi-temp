@@ -1,0 +1,8 @@
+#!/bin/bash
+
+__padding="    "
+__temp="$(/usr/bin/vcgencmd measure_temp | sed 's/temp=//')"
+
+if [ "$(echo ${__temp} | grep -ic 'failed')" -eq 0 ]; then
+    printf "${__padding}Temperature..: ${__temp}\n"
+fi
